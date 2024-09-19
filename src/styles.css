@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    font-family: 'Georgia', serif; /* Fonte serifada suave */
+    background-color: #fff2f0; /* Cor de fundo suave */
+    color: #4b6043; /* Cor verde suave do texto */
+    margin: 0;
+    padding: 0;
+  }

@@ -1,12 +1,4 @@
 /* Estilos globais */
-body {
-    font-family: 'Georgia', serif; /* Fonte serifada suave */
-    background-color: #fef6f4; /* Cor de fundo suave */
-    color: #4b6043; /* Cor verde suave do texto */
-    margin: 0;
-    padding: 0;
-  }
-  
   h1 {
     text-align: center;
     color: #4b6043;
@@ -18,8 +10,9 @@ body {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
+    margin-top: 35px;
     padding: 20px;
-    background-color: white;
+    background-color: #f4c8c2;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
