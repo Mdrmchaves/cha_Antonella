@@ -8,11 +8,11 @@
           {{ presente.nome }} - <strong>Qtd: {{ presente.quantidade }}</strong>
         </div>
         <div>
-          <button *ngIf="!presente.reservado" (click)="reservarPresente(presente)">
+          <button *ngIf="presente.quantidade >= 0" (click)="reservarPresente(presente)">
             Reservar
           </button>
-          <span *ngIf="presente.reservado" class="reserved">
-            Reservado por {{ presente.quemReservou }}
+          <span *ngIf="presente.quantidade == 0" class="reserved">
+            Indisponível
           </span>
         </div>
       </li>

@@ -8,17 +8,16 @@ import { Component } from '@angular/core';
 })
 export class ListaPresentesComponent {
   presentes = [
-    { nome: 'Bodies de manga curta TAM: RN', quantidade: 6, reservado: false, quemReservou: '' },
-    { nome: 'Bodies de manga curta TAM: P', quantidade: 6, reservado: false, quemReservou: '' },
-    { nome: 'Calça tipo "mijão" ou culote TAM: RN', quantidade: 4, reservado: false, quemReservou: '' },
+    { nome: 'Bodies de manga curta TAM: RN', quantidade: 6 },
+    { nome: 'Bodies de manga curta TAM: P', quantidade: 6 },
+    { nome: 'Calça tipo "mijão" ou culote TAM: RN', quantidade: 4 },
     // Adicione todos os itens da lista aqui
   ];
 
   reservarPresente(presente: any) {
     const nome = prompt('Digite seu nome para reservar este presente:');
     if (nome) {
-      presente.reservado = true;
-      presente.quemReservou = nome;
+      presente.quantidade = 0;
     }
   }
 }
