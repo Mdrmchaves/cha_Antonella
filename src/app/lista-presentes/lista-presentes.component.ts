@@ -1,23 +1,36 @@
 // lista-presentes.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { GoogleSheetsService } from '../services/google-sheets.service';
 
 @Component({
   selector: 'app-lista-presentes',
   templateUrl: './lista-presentes.component.html',
   styleUrls: ['./lista-presentes.component.css']
 })
-export class ListaPresentesComponent {
-  presentes = [
-    { nome: 'Bodies de manga curta TAM: RN', quantidade: 6 },
-    { nome: 'Bodies de manga curta TAM: P', quantidade: 6 },
-    { nome: 'Calça tipo "mijão" ou culote TAM: RN', quantidade: 4 },
-    // Adicione todos os itens da lista aqui
-  ];
+export class ListaPresentesComponent implements OnInit {
+  items: any[] = [];
 
-  reservarPresente(presente: any) {
-    const nome = prompt('Digite seu nome para reservar este presente:');
-    if (nome) {
-      presente.quantidade = 0;
+  constructor(private sheetsService: GoogleSheetsService) {}
+
+  ngOnInit() {
+    this.sheetsService.getItems().subscribe((data: any) => {
+      // Parseando os dados da planilha
+      const rows = data.values;
+      this.items = rows.map((row: any) => ({
+        id: row[0], // ID
+        name: row[1], // Nome do item
+        quantidade: row[2] || 0, // Nome da pessoa que reservou
+      }));
+    });
+  }
+
+  reserveItem(item: any) {
+    if (item.reservedBy) return; // Se já estiver reservado, não fazer nada
+    const name = prompt('Digite seu nome para reservar este presente:');
+    if (name) {
+      this.sheetsService.reserveItem(item.id, name).subscribe(() => {
+        item.quantidade = name; // Atualiza localmente
+      });
     }
   }
 }

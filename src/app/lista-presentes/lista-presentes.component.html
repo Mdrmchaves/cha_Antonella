@@ -1,20 +1,14 @@
 <!-- lista-presentes.component.html -->
 <div class="container">
     <h1>Lista de Presentes</h1>
-  
+
     <ul class="lista">
-      <li *ngFor="let presente of presentes">
-        <div>
-          {{ presente.nome }} - <strong>Qtd: {{ presente.quantidade }}</strong>
-        </div>
-        <div>
-          <button *ngIf="presente.quantidade >= 0" (click)="reservarPresente(presente)">
-            Reservar
-          </button>
-          <span *ngIf="presente.quantidade == 0" class="reserved">
-            Indisponível
-          </span>
-        </div>
+      <li *ngFor="let item of items">
+        {{ item.name }} - Qtd: {{ item.quantidade }}
+        <button *ngIf="item.quantidade >= 0" (click)="reserveItem(item)">Reservar</button>
+        <span *ngIf="item.quantidade == 0" class="reserved">
+          Indisponível
+        </span>
       </li>
     </ul>
   </div>
