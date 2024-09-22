@@ -3,10 +3,10 @@
   <h1>Lista de Presentes</h1>
 
   <ul class="lista">
-    <li *ngFor="let item of items">
-      {{ item.name }} - Qtd: {{ item.quantidadeRestante }}
-      <button *ngIf="item.quantidadeRestante >= 0" (click)="openModal(item)">Reservar</button>
-      <span *ngIf="item.quantidadeRestante == 0" class="reserved">
+    <li *ngFor="let iten of items">
+      {{ iten.name }} - Qtd: {{ iten.quantidadeRestante }}
+      <button *ngIf="iten.quantidadeRestante >= 1" (click)="openModal(iten)">Reservar</button>
+      <span *ngIf="iten.quantidadeRestante == 0" class="reserved">
         Indisponível
       </span>
     </li>
