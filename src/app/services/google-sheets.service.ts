@@ -45,6 +45,7 @@ export class GoogleSheetsService {
     quantidadeRestante: number
   ): Observable<Item> {
     return this.server.put<Item>(`${environment.CONNECTION_URL}/${id}`, {
+      id,
       name,
       quantidadeRestante
     });
@@ -57,6 +58,7 @@ createPerson(
   itemName: string,
   quantidade: number,
 ): Observable<PersonModel> {
+  console.log(name)
   return this.server.post<PersonModel>(`${environment.CONNECTION_URL2}`, {
     name,
     itemName,
