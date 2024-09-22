@@ -1,36 +1,72 @@
-// lista-presentes.component.ts
 import { Component, OnInit } from '@angular/core';
 import { GoogleSheetsService } from '../services/google-sheets.service';
+import { Item, PersonModel } from '../models/sheet.model';
 
 @Component({
   selector: 'app-lista-presentes',
   templateUrl: './lista-presentes.component.html',
-  styleUrls: ['./lista-presentes.component.css']
+  styleUrls: ['./lista-presentes.component.css'],
 })
 export class ListaPresentesComponent implements OnInit {
-  items: any[] = [];
+  items: Item[] = []; // Lista de itens da planilha
+  item: Item = new Item();
+  range: number[] = [];
 
-  constructor(private sheetsService: GoogleSheetsService) {}
+  person: PersonModel = new PersonModel()
+
+  constructor(
+    private sheetsService: GoogleSheetsService
+  ) {}
 
   ngOnInit() {
-    this.sheetsService.getItems().subscribe((data: any) => {
-      // Parseando os dados da planilha
-      const rows = data.values;
-      this.items = rows.map((row: any) => ({
-        id: row[0], // ID
-        name: row[1], // Nome do item
-        quantidade: row[2] || 0, // Nome da pessoa que reservou
-      }));
+    this.fetchItems(); // Carregar os itens na inicialização
+  }
+
+  // Buscar itens da planilha de presentes
+  fetchItems() {
+    this.sheetsService.listItem().subscribe({next: response => {
+          this.items = response;
+        },
+        error: error => {
+          console.error('Erro ao buscar itens:', error);
+        }
     });
   }
 
-  reserveItem(item: any) {
-    if (item.reservedBy) return; // Se já estiver reservado, não fazer nada
-    const name = prompt('Digite seu nome para reservar este presente:');
-    if (name) {
-      this.sheetsService.reserveItem(item.id, name).subscribe(() => {
-        item.quantidade = name; // Atualiza localmente
-      });
-    }
+  isModalOpen = false;
+
+  openModal(item: Item) {
+    let i = item.quantidadeRestante.toString();
+    this.item = item;
+    this.range = [...Array(parseInt(i)).keys()];
+    this.isModalOpen = true;
+
   }
+
+  closeModal() {
+    this.item = new Item();
+    this.person = new PersonModel();
+    this.isModalOpen = false;
+  }
+
+  // Fazer uma reserva
+  public reserveItem(){
+    this.person.itemName = this.item.name;
+    this.item.quantidadeRestante -= this.person.quantidade;
+        if(this.person != null){
+          try{
+            this.sheetsService.updateItem(this.item.id,this.item.name,this.item.quantidadeRestante).subscribe({
+              next: res => {
+                this.sheetsService.createPerson(this.person.personName,this.person.itemName,this.person.quantidade).subscribe({next: res => {this.closeModal(); this.fetchItems()}});
+              }
+            })
+          }catch{
+            console.log("Deu ruim");
+            this.closeModal();
+            this.fetchItems();
+          }
+        }
+  }  
+
+
 }

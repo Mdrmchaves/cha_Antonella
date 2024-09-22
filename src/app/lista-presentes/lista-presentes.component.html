@@ -1,15 +1,36 @@
 <!-- lista-presentes.component.html -->
 <div class="container">
-    <h1>Lista de Presentes</h1>
+  <h1>Lista de Presentes</h1>
 
-    <ul class="lista">
-      <li *ngFor="let item of items">
-        {{ item.name }} - Qtd: {{ item.quantidade }}
-        <button *ngIf="item.quantidade >= 0" (click)="reserveItem(item)">Reservar</button>
-        <span *ngIf="item.quantidade == 0" class="reserved">
-          Indisponível
-        </span>
-      </li>
-    </ul>
+  <ul class="lista">
+    <li *ngFor="let item of items">
+      {{ item.name }} - Qtd: {{ item.quantidadeRestante }}
+      <button *ngIf="item.quantidadeRestante >= 0" (click)="openModal(item)">Reservar</button>
+      <span *ngIf="item.quantidadeRestante == 0" class="reserved">
+        Indisponível
+      </span>
+    </li>
+  </ul>
+</div>
+<div class="modal" [ngClass]="{'show': isModalOpen}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h2>Preencha as informações</h2>
+    
+    <!-- Inputs no modal -->
+     <label for="personName">Nome</label>
+    <input type="text" [(ngModel)]="person.personName" id="personName" placeholder="Seu Nome">
+    <label for="presente">Presente</label>
+    <input type="text" disabled [ngModel]="item.name" id="presente">
+    <label for="quantidade">Quantidade</label>
+    <select [(ngModel)]="person.quantidade" id="quantidade">
+      <option value="0" [selected]="0 === person.quantidade" disabled selected>Escolha uma opção</option>
+      <option *ngFor="let i of range" [selected]="i === person.quantidade-1" value="{{i+1}}">{{i+1}}</option>
+    </select>
+
+    <!-- Botões -->
+    <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+    <button (click)="reserveItem()">Salvar</button>
   </div>
+</div>
   
