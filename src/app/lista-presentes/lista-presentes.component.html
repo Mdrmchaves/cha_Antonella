@@ -1,5 +1,5 @@
 <!-- lista-presentes.component.html -->
-<div class="container">
+<!-- <div class="container">
     <h1>Lista de Presentes</h1>
 
     <ul class="lista">
@@ -11,5 +11,31 @@
         </span>
       </li>
     </ul>
+  </div> -->
+  
+  <div *ngIf="items.length">
+    <h3>Lista de Presentes</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome do Presente</th>
+          <th>Quantidade Restante</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of items">
+          <td>{{ row[0] }}</td> <!-- ID do Item -->
+          <td>{{ row[1] }}</td> <!-- Nome do Presente -->
+          <td>{{ row[2] }}</td> <!-- Quantidade Restante -->
+        </tr>
+      </tbody>
+    </table>
+  
+    <h3>Fazer Reserva</h3>
+    <input [(ngModel)]="personName" placeholder="Seu nome" />
+    <input [(ngModel)]="itemId" placeholder="ID do item" />
+    <input [(ngModel)]="reservedQuantity" type="number" placeholder="Quantidade" />
+    <button (click)="reserveItem()">Reservar</button>
   </div>
   
