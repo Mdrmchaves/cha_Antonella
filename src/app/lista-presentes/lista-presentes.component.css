@@ -30,7 +30,7 @@
     align-items: center;
   }
   
-  .lista li button {
+  button {
     background-color: #f4c8c2; /* Botão cor de rosa suave */
     color: white;
     border: none;
@@ -41,8 +41,16 @@
     transition: background-color 0.3s ease;
   }
   
-  .lista li button:hover {
+  button:hover {
     background-color: #e69994;
+  }
+
+  .btn-cancel {
+    background-color: #aaa;
+  }
+
+  .btn-cancel:hover {
+    background-color: #b0b0b0;
   }
   
   .lista li span {
@@ -54,3 +62,84 @@
     color: #b0b0b0;
   }
   
+/* O modal é escondido por padrão */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Quando a classe 'show' é adicionada, o modal aparece */
+.modal.show {
+  display: block;
+}
+
+/* Conteúdo do modal */
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+/* Botão de fechar (X) no canto superior direito */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  cursor: pointer;
+}
+
+/* Estilos para os inputs, select e botões */
+input, select {
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+select {
+  background-color: white;
+  cursor: pointer;
+}
+
+/* Estilos para os botões */
+button {
+  margin: 10px 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+button:active {
+  background-color: #ccc;
+}
+
+.modal label{
+  text-align: left;
+  display: block;
+}

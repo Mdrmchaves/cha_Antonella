@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GoogleSheetsService } from '../services/google-sheets.service';
+import { Item, PersonModel } from '../models/sheet.model';
 
 @Component({
   selector: 'app-lista-presentes',
@@ -7,12 +8,15 @@ import { GoogleSheetsService } from '../services/google-sheets.service';
   styleUrls: ['./lista-presentes.component.css'],
 })
 export class ListaPresentesComponent implements OnInit {
-  items: any[] = []; // Lista de itens da planilha
-  personName: string = ''; // Nome da pessoa que fará a reserva
-  itemId: string = ''; // ID do item a ser reservado
-  reservedQuantity: number = 1; // Quantidade a ser reservada
+  items: Item[] = []; // Lista de itens da planilha
+  item: Item = new Item();
+  range: number[] = [];
 
-  constructor(private sheetsService: GoogleSheetsService) {}
+  person: PersonModel = new PersonModel()
+
+  constructor(
+    private sheetsService: GoogleSheetsService
+  ) {}
 
   ngOnInit() {
     this.fetchItems(); // Carregar os itens na inicialização
@@ -20,38 +24,49 @@ export class ListaPresentesComponent implements OnInit {
 
   // Buscar itens da planilha de presentes
   fetchItems() {
-    this.sheetsService.getItemsData().then(response => {
-      this.items = response.values;
-      console.log('Itens obtidos com sucesso:', this.items);
-    }).catch(error => {
-      console.error('Erro ao buscar itens:', error);
+    this.sheetsService.listItem().subscribe({next: response => {
+          this.items = response;
+        },
+        error: error => {
+          console.error('Erro ao buscar itens:', error);
+        }
     });
+  }
+
+  isModalOpen = false;
+
+  openModal(item: Item) {
+    let i = item.quantidadeRestante.toString();
+    this.item = item;
+    this.range = [...Array(parseInt(i)).keys()];
+    this.isModalOpen = true;
+
+  }
+
+  closeModal() {
+    this.item = new Item();
+    this.person = new PersonModel();
+    this.isModalOpen = false;
   }
 
   // Fazer uma reserva
-  reserveItem() {
-    const selectedItem = this.items.find(item => item[0] === this.itemId);
-    if (!selectedItem) {
-      console.error('Item não encontrado');
-      return;
-    }
+  public reserveItem(){
+    this.person.itemName = this.item.name;
+    this.item.quantidadeRestante -= this.person.quantidade;
+        if(this.person != null){
+          try{
+            this.sheetsService.updateItem(this.item.id,this.item.name,this.item.quantidadeRestante).subscribe({
+              next: res => {
+                this.sheetsService.createPerson(this.person.personName,this.person.itemName,this.person.quantidade).subscribe({next: res => {this.closeModal(); this.fetchItems()}});
+              }
+            })
+          }catch{
+            console.log("Deu ruim");
+            this.closeModal();
+            this.fetchItems();
+          }
+        }
+  }  
 
-    const remainingQuantity = selectedItem[2] - this.reservedQuantity;
 
-    if (remainingQuantity < 0) {
-      console.error('Quantidade indisponível');
-      return;
-    }
-
-    // Atualizar quantidade no inventário
-    this.sheetsService.updateItemQuantity(this.itemId, remainingQuantity).then(() => {
-      // Adicionar a reserva
-      return this.sheetsService.addReservation(this.personName, this.itemId, this.reservedQuantity);
-    }).then(() => {
-      console.log('Reserva realizada com sucesso');
-      this.fetchItems(); // Atualizar a lista de itens
-    }).catch(error => {
-      console.error('Erro ao realizar a reserva:', error);
-    });
-  }
 }
